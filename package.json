@@ -10,8 +10,12 @@
   "scripts": {
     "build": "npx unbuild"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/noonjs/noonjs-client.git"
+  },
   "keywords": [],
-  "author": "",
+  "author": "kav3",
   "license": "ISC",
   "description": "",
   "devDependencies": {
