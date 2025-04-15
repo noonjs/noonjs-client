@@ -44,13 +44,11 @@ export default class Client {
         })
     }
 
-
-
     constructor(private readonly options: { server?: string, token?: Token, io?: boolean } = {}) {
 
         this.options.io ??= true;
 
-        const { server = "http://localhost:3000/" } = options
+        const { server = "http://localhost:4000/" } = options
 
         // console.log(`connecting... ${server}`)
 
