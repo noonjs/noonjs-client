@@ -1,14 +1,21 @@
 {
   "name": "noonjs-client",
-  "version": "0.0.3",
-  "main": "dist/index.cjs",
+  "version": "0.0.4",
+  "main": "dist/noonjs-client.umd.js",
+  "module": "dist/noonjs-client.es.js",
   "types": "dist/index.d.ts",
-  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/noonjs-client.es.js",
+      "require": "./dist/noonjs-client.umd.js"
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "npx unbuild"
+    "prepublishOnly": "npm run build",
+    "build": "npx vite build && tsc"
   },
   "repository": {
     "type": "git",
@@ -23,6 +30,10 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "axios": "^1.8.3",
+    "socket.io-client": "^4.8.1"
+  },
+  "peerDependencies": {
     "axios": "^1.8.3",
     "socket.io-client": "^4.8.1"
   }
