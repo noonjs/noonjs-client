@@ -4,7 +4,7 @@ export default defineConfig({
     build: {
         lib: {
             entry: './src/index.ts',
-            name: 'noonjs-client',
+            name: 'NoonjsClient',
             fileName: (format) => `noonjs-client.${format}.js`,
         },
         rollupOptions: {
