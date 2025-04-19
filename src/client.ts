@@ -34,46 +34,60 @@ export default class Client {
         return this._auth
     }
 
+    private emitCollection(type: any, model: any, data: any, io: any) {
+        this._collections[model]?.emit(type, data, io)
+    }
+
+    private setToken(token?: Token) {
+        this.axios.token = token
+        if (this.io) {
+            this.io.disconnect()
+            this.io.auth = { token: token?.access }
+            this.io.connect()
+        }
+        this.event.emit("token", token)
+    }
+
+    private emitError(error: any) {
+        this.event.emit("error", error)
+    }
+
     live() {
         const { server = "http://localhost:4000/" } = this.options
-        
         this.io = io(server, { auth: { token: this.axios.token?.access } })
-
-        this.io.on("collection", (type, model, data, io) => {
-            this._collections[model]?.emit(type, data, io)
-        })
+        this.io.on("collection", this.emitCollection)
     }
 
     constructor(private readonly options: { server?: string, token?: Token, io?: boolean } = {}) {
-
         this.options.io ??= true;
-
         const { server = "http://localhost:4000/" } = options
-
-        // console.log(`connecting... ${server}`)
-
         this.axios = new MyAxios(`${server}`)
-
         if (options.token)
             this.axios.token = options.token
-
         this._auth = Auth.getInstance(this.axios)
+        this.init()
+    }
 
-        if (options.io !== false)
+    init() {
+        if (this.options.io !== false)
             this.live()
 
-        const setToken = (token?: Token) => {
-            this.axios.token = token
-            if (this.io) {
-                this.io.disconnect()
-                this.io.auth = { token: token?.access }
-                this.io.connect()
-            }
-            this.event.emit("token", token)
+        this.auth().on(["login", "register", "logout"], this.setToken)
+        this.axios.on("token", this.setToken)
+        this.axios.on("error", this.emitError)
+    }
+
+    close() {
+        try {
+            this.io?.disconnect()
+
+            this.auth().off(["login", "register", "logout"], this.setToken)
+            this.axios.off("token", this.setToken)
+            this.axios.off("error", this.emitError)
+            this.io?.off("collection", this.emitCollection)
+
+        } catch (error) {
+            this.emitError(error)
         }
-
-        this.auth().on(["login", "register", "logout"], setToken)
-
-        this.axios.on("token", setToken)
     }
 }
