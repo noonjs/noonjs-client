@@ -1,6 +1,6 @@
 {
   "name": "noonjs-client",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "main": "dist/noonjs-client.umd.js",
   "module": "dist/noonjs-client.es.js",
   "types": "dist/index.d.ts",

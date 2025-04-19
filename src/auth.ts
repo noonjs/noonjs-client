@@ -40,4 +40,8 @@ export default class Auth extends EventEmitter<{ login: Token, register: Token, 
             this.emit("logout", undefined)
         })
     }
+
+    token() {
+        return this.axios.token
+    }
 }
