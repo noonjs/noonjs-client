@@ -36,7 +36,7 @@ export default class Auth extends EventEmitter<{ login: (token: Token) => void, 
     }
 
     logout(signal?: AbortSignal) {
-        this.axios.create().get("/auth/logout", { signal }).then(() => {
+        this.axios.create().get("/auth/logout", { signal, headers: { Authorization: undefined } }).then(() => {
             this.emit("logout")
         })
     }
