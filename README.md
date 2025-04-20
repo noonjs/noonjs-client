@@ -1,6 +1,6 @@
 # noonjs-client
 
-**TypeScript client for [noonjs](https://github.com/your-username/noonjs)** – a zero-boilerplate backend framework that generates fully functional APIs from a single config file.  
+**TypeScript client for [noonjs](https://github.com/noonjs)** – a zero-boilerplate backend framework that generates fully functional APIs from a single config file.  
 `noonjs-client` provides seamless TypeScript integration with your **noonjs** server, handling authentication, API calls, and Socket.IO with zero setup.
 
 ## ✨ Features
