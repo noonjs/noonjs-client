@@ -41,6 +41,10 @@ export default class Auth extends EventEmitter<{ login: (token: Token) => void, 
         })
     }
 
+    refresh(signal?: AbortSignal): Promise<Token | undefined> {
+        return this.axios.refresh(signal)
+    }
+
     token() {
         return this.axios.token
     }

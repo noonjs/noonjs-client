@@ -11,12 +11,12 @@ export default class Collection extends EventEmitter<{ created: (data: any, io?:
     }
 
     count(q?: { [key: string]: any }, signal?: AbortSignal): Promise<{ total: number }> {
-        return this.axios.create({ params: { q } }).get(`${this.name}/count`, { signal }).then(x => x.data)
+        return this.axios.create().get(`${this.name}/count`, { signal, params: { q } }).then(x => x.data)
     }
 
     get(options?: { q?: { [key: string]: any }, signal?: AbortSignal, sort?: { [key: string]: any }, limit?: number, skip?: number, project?: string | string[] }): Promise<any[]>
     get({ signal, ...params }: any = {}) {
-        return this.axios.create({ params }).get(this.name, { signal }).then(r => r.data)
+        return this.axios.create().get(this.name, { signal, params }).then(r => r.data)
     }
 
     post(dto: any, signal?: AbortSignal): Promise<any> {
@@ -27,14 +27,14 @@ export default class Collection extends EventEmitter<{ created: (data: any, io?:
     }
 
     patch(dto: any | PatchOperators<any>, q?: { [key: string]: any }, signal?: AbortSignal): Promise<any> {
-        return this.axios.create({ params: { q } }).patch(this.name, dto, { signal }).then(({ data }) => {
+        return this.axios.create().patch(this.name, dto, { signal, params: { q } }).then(({ data }) => {
             this.emit("patched", data)
             return data
         })
     }
 
     delete(q?: { [key: string]: any }, signal?: AbortSignal): Promise<any> {
-        return this.axios.create({ params: { q } }).delete(`${this.name}`, { signal }).then(({ data }) => {
+        return this.axios.create().delete(`${this.name}`, { signal, params: { q } }).then(({ data }) => {
             this.emit("deleted", data)
             return data
         })

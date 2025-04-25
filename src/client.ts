@@ -10,7 +10,7 @@ export default class Client {
     io?: Socket
     private _collections: { [name: string]: Collection } = {}
     private _auth: Auth
-    private axios: MyAxios
+    axios: MyAxios
 
     on(event: any, listener: (x: any) => any) {
         this.event.on(event, listener)

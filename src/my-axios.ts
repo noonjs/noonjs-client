@@ -15,35 +15,35 @@ export default class MyAxios extends EventEmitter<{ token: (token: Token | undef
         super()
     }
 
-    async refresh() {
+    async refresh(signal?: AbortSignal): Promise<Token | undefined> {
         try {
             const { refresh } = this.token ?? {}
-            const { data: { access } } = await axios.post("/auth/refresh", { refresh }, { baseURL: this.baseURL, withCredentials: true })
+            const { data: { access } } = await axios.post("/auth/refresh", { refresh }, { baseURL: this.baseURL, withCredentials: true, signal })
             this.emit("token", { access, refresh })
-            return access
+            return { access }
         } catch (error: any) {
             this.emit("token", undefined)
         }
     }
 
-    create(config?: any): AxiosInstance {
+    create(): AxiosInstance {
         const { access } = this.token ?? {}
         const baseURL = this.baseURL
-        const a = axios.create({ baseURL, headers: { Authorization: access }, params: config?.params, withCredentials: false })
+        const a = axios.create({ baseURL, headers: { Authorization: access }, withCredentials: false })
 
         a.interceptors.response.use(resp => resp, async err => {
 
-            if (err.response.status === 401) {
-                const access = await this.refresh()
+            if (err.response?.status === 401) {
+                const { access } = await this.refresh() ?? {}
                 if (access)
                     return axios({ ...err.config, data: err.config.data && JSON.parse(err.config.data), headers: { Authorization: access } })
             }
 
-            if (err.response.status === 429)
+            if (err.response?.status === 429)
                 await new Promise(resolve => setTimeout(resolve, 2 * 1000)) // too-many-request-error
 
-            this.emit("error", err.response.data)
-            throw err.response.data
+            this.emit("error", err.response?.data)
+            throw err.response?.data
         })
 
         return a
