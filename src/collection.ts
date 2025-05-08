@@ -4,7 +4,7 @@ import MyAxios from "./my-axios";
 
 export type PatchOperators<T> = { $inc?: T, $set?: any, $unset?: T, $currentDate?: any, $mul?: T, $push?: any, $pull?: any, $pop?: -1 | 1, $pullAll?: any[], $addToSet?: any, [name: string]: any }
 
-export default class Collection extends EventEmitter<{ created: (data: any, io?: string) => void, patched: (data: any, io?: string) => void, deleted: (data: any, io?: string) => void }> {
+export default class Collection extends EventEmitter<{ created: (data: any, io?: string) => void, updated: (data: any, io?: string) => void, deleted: (data: any, io?: string) => void }> {
 
     constructor(private readonly name: string, private readonly axios: MyAxios) {
         super()
@@ -21,14 +21,14 @@ export default class Collection extends EventEmitter<{ created: (data: any, io?:
 
     post(dto: any, signal?: AbortSignal): Promise<any> {
         return this.axios.create().post(this.name, dto, { signal }).then(({ data }) => {
-            this.emit("created", { data })
+            this.emit("created", data)
             return data
         })
     }
 
     patch(dto: any | PatchOperators<any>, q?: { [key: string]: any }, signal?: AbortSignal): Promise<any> {
         return this.axios.create().patch(this.name, dto, { signal, params: { q } }).then(({ data }) => {
-            this.emit("patched", data)
+            this.emit("updated", data)
             return data
         })
     }

@@ -49,7 +49,9 @@ export default class Client {
     live() {
         const { server = "http://localhost:4000/" } = this.options
         this.io = io(server, { auth: { token: this.axios.token?.access } })
-        this.io.on("collection", (type: any, model: any, data: any, io: any) => this._collections[model]?.emit(type, { data, io }))
+        this.io.on("collection", (type: any, model: any, data: any, io: any) => {
+            this._collections[model]?.emit(type, data, io)
+        })
     }
 
     constructor(private readonly options: { server?: string, token?: Token, io?: boolean } = {}) {
